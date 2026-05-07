@@ -1,0 +1,7 @@
+opencv-python
+ultralytics
+numpy
+pillow
+customtkinter
+SpeechRecognition
+pyaudio
