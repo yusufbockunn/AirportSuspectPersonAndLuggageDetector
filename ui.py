@@ -20,6 +20,8 @@ import cv2
 import numpy as np
 from datetime import datetime
 import threading
+import os
+from pathlib import Path
 
 # Speech Recognition (opsiyonel)
 try:
@@ -67,8 +69,9 @@ class App:
         self._video_label = tk.StringVar(value="luggageVideo.mp4")
 
         # Callback'ler — main.py tarafından set edilir
-        self._on_command_cb    = None
-        self._on_load_video_cb = None
+        self._on_command_cb        = None
+        self._on_load_video_cb     = None
+        self._on_filter_change_cb  = None   # Radio buton değiştiğinde çağrılır
 
         # Canvas görsel referansı (GC koruması)
         self._current_imgtk  = None
@@ -81,6 +84,11 @@ class App:
 
         self._build_ui()
         self.root.bind("<Configure>", self._on_resize)
+
+        # ── Persistent logging ayarları ────────────────────────────────────
+        self._log_dir = Path(os.path.dirname(os.path.abspath(__file__))) / "logs"
+        self._log_dir.mkdir(exist_ok=True)
+        self._log_file_lock = threading.Lock()
 
     # ─────────────────────────────────────────────────────────────────────
     # Ana UI yapısı
@@ -152,9 +160,8 @@ class App:
         self._section(left, "📹  GÖZETİM FİLTRESİ")
         for label_text, value in [
             ("Hepsini Göster",  "all"),
-            ("Sahipsiz Çanta",  "unattended_bag"),
-            ("Şüpheli Kişi",   "suspicious_person"),
             ("Sadece Kişiler",  "person"),
+            ("Sadece Çantalar", "bag"),
         ]:
             ctk.CTkRadioButton(
                 left, text=label_text,
@@ -288,14 +295,21 @@ class App:
     # Event handler'lar
     # ─────────────────────────────────────────────────────────────────────
     def _on_filter_change(self):
+        """Kullanıcı radio butona tıkladığında: komutu temizle + log."""
         mode = self._mode.get()
         mode_labels = {
-            "all":               "Hepsi (tüm nesneler)",
-            "unattended_bag":    "Sahipsiz Çanta aranıyor",
-            "suspicious_person": "Şüpheli Kişi aranıyor",
-            "person":            "Sadece Kişiler",
+            "all":    "Hepsi (tüm nesneler)",
+            "person": "Sadece Kişiler",
+            "bag":    "Sadece Çantalar",
         }
         label = mode_labels.get(mode, mode)
+
+        # Manuel tıklama → aktif NLP komutunu temizle
+        self._cmd_text.delete("1.0", "end")
+        self._set_placeholder()
+        if self._on_filter_change_cb:
+            self._on_filter_change_cb()   # main.py → loop.clear_command()
+
         self.log(f"Filtre aktif: {label}", tag="info")
         self._last_logged_mode = mode
 
@@ -416,10 +430,15 @@ class App:
     def set_load_video_callback(self, fn):
         self._on_load_video_cb = fn
 
+    def set_filter_change_callback(self, fn):
+        """Radio buton değiştiğinde çağrılacak callback."""
+        self._on_filter_change_cb = fn
+
     def get_filter_mode(self) -> str:
         return self._mode.get()
 
     def set_filter_mode(self, mode: str):
+        """Programatik mod değişikliği (NLP komutu ile). Placeholder temizlemez."""
         self._mode.set(mode)
 
     def set_status(self, msg: str):
@@ -429,11 +448,25 @@ class App:
         self._fps_text.set(f"FPS: {fps:.1f}")
 
     def log(self, msg: str, tag: str = "info"):
-        """Sistem log kutusuna zaman damgalı renkli satır ekle."""
+        """Sistem log kutusuna zaman damgalı renkli satır ekle + dosyaya yaz."""
+        timestamp = _ts()
+
+        # UI log kutusu
         self._log_box.configure(state="normal")
-        self._log_box.insert("end", f"{_ts()} {msg}\n", tag)
+        self._log_box.insert("end", f"{timestamp} {msg}\n", tag)
         self._log_box.see("end")
         self._log_box.configure(state="disabled")
+
+        # Persistent dosya logu
+        self._write_log_to_file(timestamp, msg, tag)
+
+    def log_to_file_only(self, msg: str, tag: str = "data"):
+        """
+        Sadece persistent log dosyasına yazar — UI Textbox'a dokunmaz.
+        Yüksek frekanslı veri logları (zaman filtresi eşleşmeleri vb.) için.
+        """
+        timestamp = _ts()
+        self._write_log_to_file(timestamp, msg, tag)
 
     def update_video_frame(self, bgr_image: np.ndarray):
         """BGR görüntüyü letterbox scale ile tk.Canvas'a yansıt."""
@@ -464,3 +497,24 @@ class App:
         else:
             self._canvas.coords(self._canvas_img_id, cx, cy)
             self._canvas.itemconfig(self._canvas_img_id, image=imgtk)
+
+    # ─────────────────────────────────────────────────────────────────────
+    # Persistent Logging — Dosyaya yazma
+    # ─────────────────────────────────────────────────────────────────────
+    def _write_log_to_file(self, timestamp: str, msg: str, tag: str):
+        """
+        Log girdisini günlük dosyaya yazar.
+        Dosya adı: logs/system_log_YYYY-MM-DD.txt
+        Thread-safe: _log_file_lock ile korunur.
+        """
+        try:
+            today = datetime.now().strftime("%Y-%m-%d")
+            log_path = self._log_dir / f"system_log_{today}.txt"
+            line = f"{timestamp} [{tag.upper()}] {msg}\n"
+
+            with self._log_file_lock:
+                with open(log_path, "a", encoding="utf-8") as f:
+                    f.write(line)
+        except Exception:
+            # Dosya yazma hatası UI'ı kilitlememeli
+            pass
