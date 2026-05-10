@@ -1,0 +1,34 @@
+[00:52:30] [OK] Video başlatıldı: luggageVideo.mp4
+[00:52:30] [OK] Sistem başlatıldı. Varsayılan video: luggageVideo.mp4
+[00:52:30] [INFO] Filtre: Hepsi (tüm nesneler)
+[00:52:30] [INFO] Komut girişi hazır (TR/EN desteklenir).
+[00:52:34] [ERROR] [HATA] speech_recognition yüklü değil.
+       pip install SpeechRecognition pyaudio
+[00:53:17] [OK] Video başlatıldı: luggageVideo.mp4
+[00:53:17] [OK] Sistem başlatıldı. Varsayılan video: luggageVideo.mp4
+[00:53:17] [INFO] Filtre: Hepsi (tüm nesneler)
+[00:53:17] [INFO] Komut girişi hazır (TR/EN desteklenir).
+[00:53:25] [ERROR] [HATA] speech_recognition yüklü değil.
+       pip install SpeechRecognition pyaudio
+[00:53:26] [ERROR] [HATA] speech_recognition yüklü değil.
+       pip install SpeechRecognition pyaudio
+[00:54:26] [OK] Video başlatıldı: luggageVideo.mp4
+[00:54:26] [OK] Sistem başlatıldı. Varsayılan video: luggageVideo.mp4
+[00:54:26] [INFO] Filtre: Hepsi (tüm nesneler)
+[00:54:26] [INFO] Komut girişi hazır (TR/EN desteklenir).
+[00:54:28] [ERROR] [HATA] speech_recognition yüklü değil.
+       pip install SpeechRecognition pyaudio
+[00:55:31] [OK] Video başlatıldı: luggageVideo.mp4
+[00:55:31] [OK] Sistem başlatıldı. Varsayılan video: luggageVideo.mp4
+[00:55:31] [INFO] Filtre: Hepsi (tüm nesneler)
+[00:55:31] [INFO] Komut girişi hazır (TR/EN desteklenir).
+[00:55:33] [ERROR] [HATA] speech_recognition yüklü değil.
+       pip install SpeechRecognition pyaudio
+[00:55:34] [ERROR] [HATA] speech_recognition yüklü değil.
+       pip install SpeechRecognition pyaudio
+[00:55:34] [ERROR] [HATA] speech_recognition yüklü değil.
+       pip install SpeechRecognition pyaudio
+[00:55:34] [ERROR] [HATA] speech_recognition yüklü değil.
+       pip install SpeechRecognition pyaudio
+[00:55:34] [ERROR] [HATA] speech_recognition yüklü değil.
+       pip install SpeechRecognition pyaudio
