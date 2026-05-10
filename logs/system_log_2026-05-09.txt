@@ -1,0 +1,131 @@
+[18:37:32] [OK] Video başlatıldı: luggageVideo.mp4
+[18:37:32] [OK] Sistem başlatıldı. Varsayılan video: luggageVideo.mp4
+[18:37:32] [INFO] Filtre: Hepsi (tüm nesneler)
+[18:37:32] [INFO] Komut girişi hazır (TR/EN desteklenir).
+[18:37:40] [INFO] Filtre aktif: Sadece Kişiler
+[18:37:43] [INFO] Filtre aktif: Sadece Çantalar
+[18:37:52] [CMD] Komut: kırmızı çanta
+[18:37:52] [CMD]   → Filtre: bag | Hedef: bag | Renk: red
+[18:37:52] [OK] Komut aktif: kırmızı çanta
+[18:37:58] [DATA] Query [target=bag, color=red] → 2 match: Suitcase [ID:7] 00:03, Suitcase [ID:8] 00:03
+[18:38:08] [CMD] Komut: mavi çanta
+[18:38:08] [CMD]   → Filtre: bag | Hedef: bag | Renk: blue
+[18:38:08] [OK] Komut aktif: mavi çanta
+[18:38:31] [CMD] Komut: siyah tişörtlü kişi
+[18:38:31] [CMD]   → Filtre: person | Hedef: person | Renk: black
+[18:38:31] [OK] Komut aktif: siyah tişörtlü kişi
+[18:38:31] [DATA] Query [target=person, color=black] → 4 match: Person [ID:10] 00:07, Person [ID:18] 00:07, Person [ID:19] 00:07, Person [ID:40] 00:07
+[18:38:53] [CMD] Komut: siyah valiz
+[18:38:53] [CMD]   → Filtre: bag | Hedef: bag | Renk: black
+[18:38:53] [OK] Komut aktif: siyah valiz
+[18:38:53] [DATA] Query [target=bag, color=black] → 6 match: Suitcase [ID:1] 00:10, Suitcase [ID:2] 00:10, Suitcase [ID:3] 00:10, Suitcase [ID:9] 00:10, Suitcase [ID:12] 00:10, Suitcase [ID:14] 00:10
+[18:39:26] [DATA] Query [target=bag, color=black] → 7 match: Suitcase [ID:1] 00:03, Suitcase [ID:2] 00:03, Suitcase [ID:3] 00:03, Suitcase [ID:8] 00:03, Suitcase [ID:14] 00:03, Suitcase [ID:347] 00:02, Suitcase [ID:348] 00:02
+[18:39:54] [DATA] Query [target=bag, color=black] → 7 match: Suitcase [ID:1] 00:06, Suitcase [ID:2] 00:06, Suitcase [ID:3] 00:06, Suitcase [ID:8] 00:06, Suitcase [ID:14] 00:06, Suitcase [ID:347] 00:05, Suitcase [ID:348] 00:05
+[18:40:21] [DATA] Query [target=bag, color=black] → 6 match: Suitcase [ID:1] 00:09, Suitcase [ID:2] 00:09, Suitcase [ID:3] 00:09, Suitcase [ID:8] 00:09, Suitcase [ID:14] 00:09, Suitcase [ID:348] 00:08
+[18:41:03] [DATA] Query [target=bag, color=black] → 7 match: Suitcase [ID:1] 00:03, Suitcase [ID:2] 00:03, Suitcase [ID:3] 00:03, Suitcase [ID:14] 00:03, Suitcase [ID:16] 00:03, Suitcase [ID:671] 00:02, Suitcase [ID:672] 00:02
+[18:41:32] [DATA] Query [target=bag, color=black] → 7 match: Suitcase [ID:1] 00:06, Suitcase [ID:2] 00:06, Suitcase [ID:3] 00:06, Suitcase [ID:14] 00:06, Suitcase [ID:16] 00:06, Suitcase [ID:671] 00:05, Suitcase [ID:672] 00:05
+[18:42:00] [DATA] Query [target=bag, color=black] → 6 match: Suitcase [ID:1] 00:09, Suitcase [ID:2] 00:09, Suitcase [ID:3] 00:09, Suitcase [ID:14] 00:09, Suitcase [ID:16] 00:09, Suitcase [ID:672] 00:08
+[18:42:43] [DATA] Query [target=bag, color=black] → 7 match: Suitcase [ID:1] 00:03, Suitcase [ID:2] 00:03, Suitcase [ID:3] 00:03, Suitcase [ID:14] 00:03, Suitcase [ID:349] 00:03, Suitcase [ID:995] 00:02, Suitcase [ID:996] 00:02
+[18:42:46] [CMD] Komut: yeşil kutu
+[18:42:46] [CMD]   → Filtre: person | Hedef: person | Renk: green
+[18:42:46] [OK] Komut aktif: yeşil kutu
+[18:43:08] [CMD] Komut: ışık
+[18:43:08] [CMD]   → Filtre: all
+[18:43:08] [OK] Komut temizlendi: Tüm nesneler gösteriliyor.
+[18:43:21] [CMD] Komut: beyaz ışık
+[18:43:21] [CMD]   → Filtre: person | Hedef: person | Renk: white
+[18:43:21] [OK] Komut aktif: beyaz ışık
+[18:43:21] [DATA] Query [target=person, color=white] → 1 match: Person [ID:25] 00:08
+[18:43:33] [INFO] Filtre aktif: Hepsi (tüm nesneler)
+[18:43:39] [INFO] Filtre aktif: Sadece Çantalar
+[18:43:45] [INFO] Filtre aktif: Sadece Kişiler
+[18:43:47] [INFO] Filtre aktif: Hepsi (tüm nesneler)
+[19:05:35] [OK] Video başlatıldı: luggageVideo.mp4
+[19:05:35] [OK] Sistem başlatıldı. Varsayılan video: luggageVideo.mp4
+[19:05:35] [INFO] Filtre: Hepsi (tüm nesneler)
+[19:05:35] [INFO] Komut girişi hazır (TR/EN desteklenir).
+[19:05:44] [CMD] Komut: yeşil valiz
+[19:05:44] [CMD]   → Filtre: bag | Hedef: bag | Renk: green
+[19:05:44] [OK] Komut aktif: yeşil valiz
+[19:05:52] [CMD] Komut: yeşil bavul
+[19:05:52] [CMD]   → Filtre: bag | Hedef: bag | Renk: green
+[19:05:52] [OK] Komut aktif: yeşil bavul
+[19:05:57] [CMD] Komut: bej bavul
+[19:05:57] [CMD]   → Filtre: bag | Hedef: bag | Renk: beige
+[19:05:57] [OK] Komut aktif: bej bavul
+[19:05:58] [DATA] Query [target=bag, color=beige] → 1 match: Suitcase [ID:26] 00:03
+[19:05:59] [CMD] Komut: bej bavul
+[19:05:59] [CMD]   → Filtre: bag | Hedef: bag | Renk: beige
+[19:05:59] [OK] Komut aktif: bej bavul
+[19:05:59] [DATA] Query [target=bag, color=beige] → 1 match: Suitcase [ID:26] 00:03
+[19:06:13] [CMD] Komut: kahverengi bavul
+[19:06:13] [CMD]   → Filtre: bag | Hedef: bag | Renk: brown
+[19:06:13] [OK] Komut aktif: kahverengi bavul
+[19:06:13] [DATA] Query [target=bag, color=brown] → 5 match: Suitcase [ID:1] 00:04, Suitcase [ID:4] 00:04, Suitcase [ID:11] 00:04, Suitcase [ID:14] 00:04, Suitcase [ID:15] 00:04
+[19:06:25] [INFO] Filtre aktif: Sadece Kişiler
+[19:06:26] [INFO] Filtre aktif: Sadece Çantalar
+[19:06:57] [INFO] Filtre aktif: Hepsi (tüm nesneler)
+[19:15:56] [OK] Video başlatıldı: luggageVideo.mp4
+[19:15:56] [OK] Sistem başlatıldı. Varsayılan video: luggageVideo.mp4
+[19:15:56] [INFO] Filtre: Hepsi (tüm nesneler)
+[19:15:56] [INFO] Komut girişi hazır (TR/EN desteklenir).
+[19:17:04] [CMD] Komut: yeşil valiz
+[19:17:04] [CMD]   → Filtre: bag | Hedef: bag | Renk: green
+[19:17:04] [OK] Komut aktif: yeşil valiz
+[19:17:04] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:12] 00:09
+[19:17:34] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:8] 00:03
+[19:17:58] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:8] 00:06
+[19:18:22] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:8] 00:09
+[19:18:58] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:16] 00:03
+[19:19:22] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:16] 00:06
+[19:19:46] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:16] 00:09
+[19:20:22] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:349] 00:03
+[19:21:22] [OK] Video başlatıldı: luggageVideo.mp4
+[19:21:22] [OK] Sistem başlatıldı. Varsayılan video: luggageVideo.mp4
+[19:21:22] [INFO] Filtre: Hepsi (tüm nesneler)
+[19:21:22] [INFO] Komut girişi hazır (TR/EN desteklenir).
+[19:21:30] [CMD] Komut: kırmzı valiz
+[19:21:30] [CMD]   → Filtre: bag | Hedef: bag
+[19:21:30] [OK] Komut aktif: kırmzı valiz
+[19:21:55] [DATA] Query [target=bag] → 16 match: Suitcase [ID:1] 00:03, Suitcase [ID:2] 00:03, Suitcase [ID:3] 00:03, Suitcase [ID:4] 00:03, Suitcase [ID:5] 00:03, Suitcase [ID:6] 00:03, Suitcase [ID:7] 00:03, Suitcase [ID:8] 00:03, Suitcase [ID:9] 00:03, Suitcase [ID:11] 00:03, Suitcase [ID:12] 00:03, Suitcase [ID:14] 00:03, Suitcase [ID:15] 00:03, Suitcase [ID:16] 00:03, Suitcase [ID:30] 00:03, Suitcase [ID:26] 00:03
+[19:25:20] [OK] Video başlatıldı: luggageVideo.mp4
+[19:25:20] [OK] Sistem başlatıldı. Varsayılan video: luggageVideo.mp4
+[19:25:20] [INFO] Filtre: Hepsi (tüm nesneler)
+[19:25:20] [INFO] Komut girişi hazır (TR/EN desteklenir).
+[19:25:28] [CMD] Komut: yeşil valiz
+[19:25:28] [CMD]   → Filtre: bag | Hedef: bag | Renk: green
+[19:25:28] [OK] Komut aktif: yeşil valiz
+[19:25:28] [OK] Komut aktif: yeşil valiz
+[19:25:43] [INFO] Filtre aktif: Hepsi (tüm nesneler)
+[19:27:41] [OK] Video başlatıldı: luggageVideo.mp4
+[19:27:41] [OK] Sistem başlatıldı. Varsayılan video: luggageVideo.mp4
+[19:27:41] [INFO] Filtre: Hepsi (tüm nesneler)
+[19:27:41] [INFO] Komut girişi hazır (TR/EN desteklenir).
+[19:27:50] [CMD] Komut: yeşil valiz
+[19:27:50] [CMD]   → Filtre: bag | Hedef: bag | Renk: green
+[19:27:50] [OK] Komut aktif: yeşil valiz
+[19:27:50] [OK] Komut aktif: yeşil valiz
+[19:28:03] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:12] 00:03
+[19:28:28] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:12] 00:06
+[19:28:52] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:12] 00:09
+[19:29:28] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:8] 00:03
+[19:29:52] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:8] 00:06
+[19:30:16] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:8] 00:09
+[19:30:52] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:16] 00:03
+[19:31:15] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:16] 00:06
+[19:31:39] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:16] 00:09
+[19:32:15] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:349] 00:03
+[19:32:39] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:349] 00:06
+[19:33:02] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:349] 00:09
+[19:33:39] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:673] 00:03
+[19:34:02] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:673] 00:06
+[19:34:28] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:673] 00:09
+[19:35:06] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:997] 00:03
+[19:35:32] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:997] 00:06
+[19:35:56] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:997] 00:09
+[19:36:33] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:1321] 00:03
+[19:36:57] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:1321] 00:06
+[19:37:21] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:1321] 00:09
+[19:42:55] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:1645] 00:03
+[19:43:19] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:1645] 00:06
+[19:43:44] [DATA] Query [target=bag, color=green] → 1 match: Suitcase [ID:1645] 00:09

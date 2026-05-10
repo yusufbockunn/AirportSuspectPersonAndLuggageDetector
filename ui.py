@@ -1,19 +1,18 @@
 """
 ui.py
 -----
-CustomTkinter tabanlı modern arayüz — v5
+CustomTkinter tabanlı modern arayüz — v6
 
-Özellikler:
-  • CustomTkinter ile modern karanlık tema tasarımı
-  • Ses komutu desteği (Speech-to-Text) — Google Speech Recognition
-  • Gözetim filtresi (radio butonlar)
-  • Komut Girişi paneli (TR/EN doğal dil komutları)
-  • Sistem Logları (renkli, zaman damgalı)
-  • Video Seç butonu ile runtime'da video değiştirme
+Düzeltmeler (v6):
+  • _trigger_command: placeholder kontrolü güvenilir hale getirildi
+  • _clear_placeholder / _restore_placeholder: state yönetimi düzeltildi
+  • _on_enter_key: return "break" her durumda uygulanıyor (çift gönderim önlendi)
+  • set_filter_mode: artık log yazmıyor (main.py zaten log yazıyor, spam önlendi)
+  • Komut kutusu her gönderimden sonra kesinlikle temizlenip placeholder konuluyor
 """
 
 import customtkinter as ctk
-import tkinter as tk                    # Sadece Canvas için
+import tkinter as tk
 from tkinter import filedialog
 from PIL import Image, ImageTk
 import cv2
@@ -49,9 +48,10 @@ DARK_BG = "#010409"
 
 FONT = "Segoe UI"
 
+PLACEHOLDER_TEXT = "Örn: beyaz tişörtlü kişiyi bul"
+
 
 def _ts() -> str:
-    """Kısa zaman damgası:  [HH:MM:SS]"""
     return datetime.now().strftime("[%H:%M:%S]")
 
 
@@ -68,24 +68,23 @@ class App:
         self._fps_text    = tk.StringVar(value="")
         self._video_label = tk.StringVar(value="luggageVideo.mp4")
 
-        # Callback'ler — main.py tarafından set edilir
-        self._on_command_cb        = None
-        self._on_load_video_cb     = None
-        self._on_filter_change_cb  = None   # Radio buton değiştiğinde çağrılır
+        # Callback'ler
+        self._on_command_cb       = None
+        self._on_load_video_cb    = None
+        self._on_filter_change_cb = None
 
-        # Canvas görsel referansı (GC koruması)
+        # Canvas görsel referansı
         self._current_imgtk  = None
         self._canvas_img_id  = None
         self._canvas_text_id = None
 
         # Placeholder durumu
         self._placeholder_active = False
-        self._last_logged_mode   = None
 
         self._build_ui()
         self.root.bind("<Configure>", self._on_resize)
 
-        # ── Persistent logging ayarları ────────────────────────────────────
+        # Persistent logging
         self._log_dir = Path(os.path.dirname(os.path.abspath(__file__))) / "logs"
         self._log_dir.mkdir(exist_ok=True)
         self._log_file_lock = threading.Lock()
@@ -94,37 +93,29 @@ class App:
     # Ana UI yapısı
     # ─────────────────────────────────────────────────────────────────────
     def _build_ui(self):
-        # ── Üst başlık ──────────────────────────────────────────────────
-        header = ctk.CTkFrame(self.root, height=50, fg_color=PANEL,
-                              corner_radius=0)
+        header = ctk.CTkFrame(self.root, height=50, fg_color=PANEL, corner_radius=0)
         header.pack(fill="x", side="top")
         header.pack_propagate(False)
 
         ctk.CTkLabel(header, text="⬡  GÜVENLİK ANALİZ SİSTEMİ",
                      text_color=GREEN,
                      font=(FONT, 15, "bold")).pack(side="left", padx=20, pady=12)
-        ctk.CTkLabel(header, text="YOLOv8n  +  OpenCV  |  Video Analiz",
+        ctk.CTkLabel(header, text="YOLOv8s  +  OpenCV  |  Video Analiz",
                      text_color=MUTED,
                      font=(FONT, 11)).pack(side="left", padx=6)
         ctk.CTkLabel(header, textvariable=self._fps_text,
                      text_color=GREEN,
                      font=(FONT, 11, "bold")).pack(side="right", padx=20)
 
-        # İnce çizgi
-        ctk.CTkFrame(self.root, height=1, fg_color=BORDER,
-                     corner_radius=0).pack(fill="x")
+        ctk.CTkFrame(self.root, height=1, fg_color=BORDER, corner_radius=0).pack(fill="x")
 
-        # ── Ana içerik ──────────────────────────────────────────────────
         content = ctk.CTkFrame(self.root, fg_color=BG, corner_radius=0)
         content.pack(fill="both", expand=True)
         self._build_left_panel(content)
         self._build_right_panel(content)
 
-        # ── Alt durum çubuğu ────────────────────────────────────────────
-        ctk.CTkFrame(self.root, height=1, fg_color=BORDER,
-                     corner_radius=0).pack(fill="x")
-        status_bar = ctk.CTkFrame(self.root, height=30, fg_color=BG,
-                                  corner_radius=0)
+        ctk.CTkFrame(self.root, height=1, fg_color=BORDER, corner_radius=0).pack(fill="x")
+        status_bar = ctk.CTkFrame(self.root, height=30, fg_color=BG, corner_radius=0)
         status_bar.pack(fill="x")
         status_bar.pack_propagate(False)
         ctk.CTkLabel(status_bar, textvariable=self._status_text,
@@ -139,7 +130,7 @@ class App:
         left.pack(side="left", fill="y")
         left.pack_propagate(False)
 
-        # ── Video Seç ──────────────────────────────────────────────────
+        # Video Seç
         self._section(left, "📁  VİDEO KAYNAĞI")
         video_row = ctk.CTkFrame(left, fg_color="transparent")
         video_row.pack(fill="x", padx=16, pady=(0, 6))
@@ -156,7 +147,7 @@ class App:
 
         self._divider(left)
 
-        # ── Gözetim Filtresi ───────────────────────────────────────────
+        # Gözetim Filtresi
         self._section(left, "📹  GÖZETİM FİLTRESİ")
         for label_text, value in [
             ("Hepsini Göster",  "all"),
@@ -174,7 +165,7 @@ class App:
 
         self._divider(left)
 
-        # ── Komut Girişi ───────────────────────────────────────────────
+        # Komut Girişi
         self._section(left, "🎯  KOMUT GİRİŞİ")
         ctk.CTkLabel(left, text="Komut girin (TR / EN):",
                      text_color=MUTED,
@@ -192,7 +183,6 @@ class App:
         self._cmd_text.bind("<FocusOut>", self._restore_placeholder)
         self._cmd_text.bind("<Return>",   self._on_enter_key)
 
-        # Buton satırı: [Komutu Uygula] [🎤 Ses]
         btn_row = ctk.CTkFrame(left, fg_color="transparent")
         btn_row.pack(fill="x", padx=16, pady=(0, 12))
 
@@ -216,7 +206,7 @@ class App:
 
         self._divider(left)
 
-        # ── Sistem Logları ─────────────────────────────────────────────
+        # Sistem Logları
         self._section(left, "📋  SİSTEM LOGLARI")
 
         self._log_box = ctk.CTkTextbox(
@@ -228,7 +218,6 @@ class App:
         )
         self._log_box.pack(fill="both", expand=True, padx=16, pady=(0, 14))
 
-        # Renkli tag tanımları
         self._log_box.tag_config("error", foreground=RED)
         self._log_box.tag_config("warn",  foreground=YELLOW)
         self._log_box.tag_config("ok",    foreground=GREEN)
@@ -236,7 +225,7 @@ class App:
         self._log_box.tag_config("cmd",   foreground=CYAN)
 
     # ─────────────────────────────────────────────────────────────────────
-    # Sağ Panel — tk.Canvas (OpenCV frame)
+    # Sağ Panel
     # ─────────────────────────────────────────────────────────────────────
     def _build_right_panel(self, parent):
         right = ctk.CTkFrame(parent, fg_color=BG, corner_radius=0)
@@ -256,31 +245,53 @@ class App:
     def _section(self, parent, title):
         ctk.CTkLabel(parent, text=title,
                      text_color=ACCENT,
-                     font=(FONT, 11, "bold")).pack(
-            anchor="w", padx=16, pady=(14, 5))
+                     font=(FONT, 11, "bold")).pack(anchor="w", padx=16, pady=(14, 5))
 
     def _divider(self, parent):
         ctk.CTkFrame(parent, height=1, fg_color=BORDER,
                      corner_radius=0).pack(fill="x", padx=12, pady=8)
 
     # ─────────────────────────────────────────────────────────────────────
-    # Placeholder
+    # Placeholder yönetimi
     # ─────────────────────────────────────────────────────────────────────
     def _set_placeholder(self):
+        """Kutuyu temizle ve placeholder metnini gri renkte yaz."""
+        self._cmd_text.configure(state="normal")
         self._cmd_text.delete("1.0", "end")
-        self._cmd_text.insert("1.0", "Örn: beyaz tişörtlü kişiyi bul")
+        self._cmd_text.insert("1.0", PLACEHOLDER_TEXT)
         self._cmd_text.configure(text_color=MUTED)
         self._placeholder_active = True
 
     def _clear_placeholder(self, _=None):
+        """Odaklanıldığında placeholder'ı temizle."""
         if self._placeholder_active:
             self._cmd_text.delete("1.0", "end")
             self._cmd_text.configure(text_color=TEXT)
             self._placeholder_active = False
 
     def _restore_placeholder(self, _=None):
-        if not self._cmd_text.get("1.0", "end").strip():
-            self._set_placeholder()
+        """
+        Odak kaybolduğunda kutu boşsa placeholder'ı geri koy.
+        _trigger_command zaten placeholder set ediyor; bu sadece
+        kullanıcı kutuyu boş bırakıp başka yere tıklarsa devreye girer.
+        """
+        # _trigger_command çağrısı placeholder'ı zaten set etti,
+        # ikinci kez set etmemek için içerik kontrolü yap
+        content = self._cmd_text.get("1.0", "end").strip()
+        if not content or content == PLACEHOLDER_TEXT:
+            if not self._placeholder_active:
+                self._set_placeholder()
+
+    def _get_real_text(self) -> str:
+        """
+        Komut kutusundaki gerçek kullanıcı metnini döndürür.
+        Flag'e değil, doğrudan içeriğe bakarak placeholder tespiti yapar.
+        Böylece focus event'i tetiklenmese bile doğru çalışır.
+        """
+        content = self._cmd_text.get("1.0", "end").strip()
+        if not content or content == PLACEHOLDER_TEXT:
+            return ""
+        return content
 
     # ─────────────────────────────────────────────────────────────────────
     # Resize
@@ -295,7 +306,7 @@ class App:
     # Event handler'lar
     # ─────────────────────────────────────────────────────────────────────
     def _on_filter_change(self):
-        """Kullanıcı radio butona tıkladığında: komutu temizle + log."""
+        """Radio buton tıklandığında: aktif NLP komutunu temizle + log."""
         mode = self._mode.get()
         mode_labels = {
             "all":    "Hepsi (tüm nesneler)",
@@ -304,14 +315,13 @@ class App:
         }
         label = mode_labels.get(mode, mode)
 
-        # Manuel tıklama → aktif NLP komutunu temizle
-        self._cmd_text.delete("1.0", "end")
+        # Komut kutusunu temizle
         self._set_placeholder()
+
         if self._on_filter_change_cb:
-            self._on_filter_change_cb()   # main.py → loop.clear_command()
+            self._on_filter_change_cb()
 
         self.log(f"Filtre aktif: {label}", tag="info")
-        self._last_logged_mode = mode
 
     def _load_video(self):
         path = filedialog.askopenfilename(
@@ -332,18 +342,32 @@ class App:
             self.log("[HATA] Video yükleme callback'i bağlanmadı.", tag="error")
 
     def _on_enter_key(self, event):
-        if not (event.state & 0x1):     # Shift basılı değilse komutu gönder
+        """
+        Enter → komutu gönder (her durumda).
+        Shift+Enter → normal satır atlama.
+        Her iki durumda da "break" dönerek TextBox'ın varsayılan
+        davranışını engelliyoruz; Shift+Enter için manuel newline ekliyoruz.
+        """
+        if event.state & 0x1:  # Shift basılı
+            self._cmd_text.insert("insert", "\n")
+        else:
             self._trigger_command()
-            return "break"
+        return "break"  # Her durumda TextBox'ın kendi Enter işlemini engelle
 
     def _trigger_command(self):
-        if self._placeholder_active:
-            return
-        prompt = self._cmd_text.get("1.0", "end").strip()
+        """Komut kutusundaki metni al ve callback'e gönder."""
+        # İçeriği flag'e bakmadan direkt oku (_get_real_text placeholder ile karşılaştırır)
+        prompt = self._get_real_text()
+
         if not prompt:
+            self._set_placeholder()
             return
+
+        # Kutuyu ÖNCE temizle, sonra callback çağır
+        # (callback içinde başka UI işlemleri olursa placeholder state temiz olsun)
+        self._set_placeholder()
+
         if self._on_command_cb:
-            self.log(f"Komut: {prompt}", tag="cmd")
             self._on_command_cb(prompt)
         else:
             self.log("[HATA] Komut callback'i bağlanmadı.", tag="error")
@@ -352,13 +376,11 @@ class App:
     # Ses Komutu (Speech-to-Text)
     # ─────────────────────────────────────────────────────────────────────
     def _start_voice_input(self):
-        """Mikrofonu aç — arka plan thread'inde dinle."""
         if not SR_AVAILABLE:
             self.log("[HATA] speech_recognition yüklü değil.\n"
                      "       pip install SpeechRecognition pyaudio", tag="error")
             return
 
-        # Butonu "dinleniyor" durumuna al
         self._mic_btn.configure(
             text="🔴 Dinleniyor...",
             fg_color=RED,
@@ -370,13 +392,11 @@ class App:
         thread.start()
 
     def _voice_listen(self):
-        """Arka plan thread'i — mikrofonu dinler, sonucu UI thread'ine gönderir."""
         recognizer = sr.Recognizer()
         try:
             with sr.Microphone() as source:
                 recognizer.adjust_for_ambient_noise(source, duration=0.5)
-                audio = recognizer.listen(source, timeout=5,
-                                          phrase_time_limit=10)
+                audio = recognizer.listen(source, timeout=5, phrase_time_limit=10)
 
             text = recognizer.recognize_google(audio, language="tr-TR")
             self.root.after(0, lambda: self._on_voice_result(text))
@@ -395,26 +415,21 @@ class App:
                 f"Mikrofon hatası: {e}"))
 
     def _on_voice_result(self, text: str):
-        """Main thread — tanınan metni komut kutusuna yaz ve çalıştır."""
         self._reset_mic_button()
         self.log(f"Ses komutu algılandı: \"{text}\"", tag="ok")
 
-        # Placeholder'ı temizle ve metin kutusuna yaz
+        # Metni kutuya yaz ve gönder
         self._placeholder_active = False
         self._cmd_text.configure(text_color=TEXT)
         self._cmd_text.delete("1.0", "end")
         self._cmd_text.insert("1.0", text)
-
-        # Otomatik olarak komutu çalıştır
         self._trigger_command()
 
     def _on_voice_error(self, msg: str):
-        """Main thread — hata logla ve butonu sıfırla."""
         self._reset_mic_button()
         self.log(f"[SES] {msg}", tag="error")
 
     def _reset_mic_button(self):
-        """Mikrofon butonunu varsayılan haline döndür."""
         self._mic_btn.configure(
             text="🎤 Ses",
             fg_color="#2d333b",
@@ -422,7 +437,7 @@ class App:
         )
 
     # ─────────────────────────────────────────────────────────────────────
-    # Public API — main.py tarafından kullanılır
+    # Public API
     # ─────────────────────────────────────────────────────────────────────
     def set_command_callback(self, fn):
         self._on_command_cb = fn
@@ -431,14 +446,13 @@ class App:
         self._on_load_video_cb = fn
 
     def set_filter_change_callback(self, fn):
-        """Radio buton değiştiğinde çağrılacak callback."""
         self._on_filter_change_cb = fn
 
     def get_filter_mode(self) -> str:
         return self._mode.get()
 
     def set_filter_mode(self, mode: str):
-        """Programatik mod değişikliği (NLP komutu ile). Placeholder temizlemez."""
+        """Programatik mod değişikliği (NLP komutu ile). Log yazmaz."""
         self._mode.set(mode)
 
     def set_status(self, msg: str):
@@ -448,28 +462,20 @@ class App:
         self._fps_text.set(f"FPS: {fps:.1f}")
 
     def log(self, msg: str, tag: str = "info"):
-        """Sistem log kutusuna zaman damgalı renkli satır ekle + dosyaya yaz."""
         timestamp = _ts()
 
-        # UI log kutusu
         self._log_box.configure(state="normal")
         self._log_box.insert("end", f"{timestamp} {msg}\n", tag)
         self._log_box.see("end")
         self._log_box.configure(state="disabled")
 
-        # Persistent dosya logu
         self._write_log_to_file(timestamp, msg, tag)
 
     def log_to_file_only(self, msg: str, tag: str = "data"):
-        """
-        Sadece persistent log dosyasına yazar — UI Textbox'a dokunmaz.
-        Yüksek frekanslı veri logları (zaman filtresi eşleşmeleri vb.) için.
-        """
         timestamp = _ts()
         self._write_log_to_file(timestamp, msg, tag)
 
     def update_video_frame(self, bgr_image: np.ndarray):
-        """BGR görüntüyü letterbox scale ile tk.Canvas'a yansıt."""
         cw = self._canvas.winfo_width()
         ch = self._canvas.winfo_height()
         if cw < 2 or ch < 2:
@@ -484,7 +490,7 @@ class App:
         pil     = Image.fromarray(rgb)
         imgtk   = ImageTk.PhotoImage(image=pil)
 
-        self._current_imgtk = imgtk  # GC koruması
+        self._current_imgtk = imgtk
 
         if self._canvas_text_id:
             self._canvas.delete(self._canvas_text_id)
@@ -499,14 +505,9 @@ class App:
             self._canvas.itemconfig(self._canvas_img_id, image=imgtk)
 
     # ─────────────────────────────────────────────────────────────────────
-    # Persistent Logging — Dosyaya yazma
+    # Persistent Logging
     # ─────────────────────────────────────────────────────────────────────
     def _write_log_to_file(self, timestamp: str, msg: str, tag: str):
-        """
-        Log girdisini günlük dosyaya yazar.
-        Dosya adı: logs/system_log_YYYY-MM-DD.txt
-        Thread-safe: _log_file_lock ile korunur.
-        """
         try:
             today = datetime.now().strftime("%Y-%m-%d")
             log_path = self._log_dir / f"system_log_{today}.txt"
@@ -516,5 +517,4 @@ class App:
                 with open(log_path, "a", encoding="utf-8") as f:
                     f.write(line)
         except Exception:
-            # Dosya yazma hatası UI'ı kilitlememeli
             pass

@@ -37,21 +37,30 @@ _COLOR_MAP: dict[str, str] = {
     "turuncu": "orange",
     "mor":     "purple",
     "gri":     "gray",
-    "lacivert":  "navy",
-    "koyu mavi": "navy",
+    "lacivert":    "navy",
+    "koyu mavi":   "navy",
+    "bej":         "beige",        # yeni
+    "kahve":       "brown",        # yeni
+    "kahverengi":  "brown",        # yeni
+    "koyu yeşil":  "dark_green",   # yeni
+    "koyu yesil":  "dark_green",   # yeni
+
     # İngilizce
-    "white":     "white",
-    "black":     "black",
-    "red":       "red",
-    "blue":      "blue",
-    "green":     "green",
-    "yellow":    "yellow",
-    "orange":    "orange",
-    "purple":    "purple",
-    "gray":      "gray",
-    "grey":      "gray",
-    "navy":      "navy",
-    "dark blue": "navy",
+    "white":      "white",
+    "black":      "black",
+    "red":        "red",
+    "blue":       "blue",
+    "green":      "green",
+    "yellow":     "yellow",
+    "orange":     "orange",
+    "purple":     "purple",
+    "gray":       "gray",
+    "grey":       "gray",
+    "navy":       "navy",
+    "dark blue":  "navy",
+    "beige":      "beige",         # yeni
+    "brown":      "brown",         # yeni
+    "dark green": "dark_green",    # yeni
 }
 
 # ── Nesne etiket eşlemeleri (TR → YOLO label) ────────────────────────────
